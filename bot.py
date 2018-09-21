@@ -13,17 +13,17 @@ def get_url(url):
     content = response.content.decode("utf8")
     return content
 
-def getDate():
-    now = datetime.datetime.now()
-    year = now.year
-    month = now.month
-    if month < 10:
-        month = "0"+str(month)
-    day = now.day
-    if day < 10:
-        day = "0"+str(day)
-    date = "{}-{}-{}".format(year, month, day)
-    return date
+# def getDate():
+#     now = datetime.datetime.now()
+#     year = now.year
+#     month = now.month
+#     if month < 10:
+#         month = "0"+str(month)
+#     day = now.day
+#     if day < 10:
+#         day = "0"+str(day)
+#     date = "{}-{}-{}".format(year, month, day)
+#     return date
 
 
 def get_json_from_url(url):

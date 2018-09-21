@@ -4,13 +4,18 @@ import datetime
 # import test
 
 
-def getDate():
+def getDate(I):	# pass 0 for today's date, pass 1 for yesterday's date
 	now = datetime.datetime.now()
 	year = now.year
 	month = now.month
 	if month < 10:
 		month = "0"+str(month)
-	day = now.day
+
+	if I == 0: 
+		day = now.day
+	elif I == 1:
+		day = now.day - 1
+
 	if day < 10:
 		day = "0"+str(day)
 	date = "{}-{}-{}".format(year, month, day)
@@ -74,6 +79,76 @@ teamIDs = {
 	"vgk":"54", "knights":"54", "vegas":"54"
 }
 
+teamNames = {
+	"devils":"New Jersey Devils","njd":"New Jersey Devils",
+	"islanders":"New York Islanders", "nyi":"New York Islanders",
+	"rangers":"New York Rangers", "nyr":"New York Rangers",
+	"flyers":"Philadelphia Flyers", "phi":"Philadelphia Flyers",
+	"penguins":"Pittsburgh Penguins", "bitchpigeons":"Pittsburgh Penguins", "pens":"Pittsburgh Penguins", "pit":"Pittsburgh Penguins",
+	"bruins":"Boston Bruins", "bos":"Boston Bruins",
+	"sabres":"Buffalo Sabres", "buf":"Buffalo Sabres",
+
+	"senators":"Ottawa Senators", "ott":"Ottawa Senators",
+	"leafs":"Toronto Maple Leafs", "tor":"Toronto Maple Leafs",
+	"hurricanes":"Carolina Hurricanes", "car":"Carolina Hurricanes",
+	"panthers":"Florida Panthers", "pans":"Florida Panthers", "fla":"Florida Panthers",
+	"lightning":"Tampa Bay Lightning", "tbl":"Tampa Bay Lightning",
+	"capitals":"Washington Capitals", "caps":"Washington Capitals", "was":"Washington Capitals", "wsh":"Washington Capitals",
+	"blackhawks":"Chicago Blackhawks", "chi":"Chicago Blackhawks",
+	"redwings":"Detroit Red Wings", "det":"Detroit Red Wings",
+	"predators":"Nashville Predators", "nsh":"Nashville Predators",
+	"blues":"St. Louis Blues", "stl":"St. Louis Blues",
+	"flames":"Calgary Flames", "cgy":"Calgary Flames",
+	"avalanche":"Colorado Avalanche", "avs":"Colorado Avalanche", "col":"Colorado Avalanche",
+	"oilers":"Edmonton Oilers", "edm":"Edmonton Oilers",
+	"canucks":"Vancouver Canucks", "van":"Vancouver Canucks",
+	"ducks":"Anaheim Ducks", "ana":"Anaheim Ducks",
+	"stars":"Dallas Stars", "dal":"Dallas Stars",
+	"kings":"Los Angeles Kings", "lak":'Los Angeles Kings',
+	"sharks":"San Jose Sharks", "sjs":"San Jose Sharks",
+	"cbj":"29", "bjs":"29", "blue jackets":"29",
+	"wild":"Minnesota Wild", "min":"Minnesota Wild",
+	"jets":"Winnipeg Jets", "wpg":"Winnipeg Jets",
+	"coyotes":"Arizona Coyotes", "ari":"Arizona Coyotes",
+	"vgk":"Vegas Golden Knights", "knights":"Vegas Golden Knights", "vegas":"Vegas Golden Knights"
+}
+
+# teamAbbrevs = {
+# 	"New Jersey Devils":"NJD",
+# 	"New York Islanders":"NYI",
+# 	"New York Rangers":"NYR",
+# 	"Philadelphia Flyers":"PHI",
+# 	"Pittsburgh Penguins":"PIT",
+# 	"Boston Bruins":"BOS",
+# 	"Buffalo Sabres":"BUF",
+
+# 	"Ottawa Senators", "OTT", #-----------------------------------------------------------------------------------------------------------------FINISH THIS
+# 	"leafs":"Toronto Maple Leafs", "tor":"Toronto Maple Leafs",
+# 	"hurricanes":"Carolina Hurricanes", "car":"Carolina Hurricanes",
+# 	"panthers":"Florida Panthers", "pans":"Florida Panthers", "fla":"Florida Panthers",
+# 	"lightning":"Tampa Bay Lightning", "tbl":"Tampa Bay Lightning",
+# 	"capitals":"Washington Capitals", "caps":"Washington Capitals", "was":"Washington Capitals", "wsh":"Washington Capitals",
+# 	"blackhawks":"Chicago Blackhawks", "chi":"Chicago Blackhawks",
+# 	"redwings":"Detroit Red Wings", "det":"Detroit Red Wings",
+# 	"predators":"Nashville Predators", "nsh":"Nashville Predators",
+# 	"blues":"St. Louis Blues", "stl":"St. Louis Blues",
+# 	"flames":"Calgary Flames", "cgy":"Calgary Flames",
+# 	"avalanche":"Colorado Avalanche", "avs":"Colorado Avalanche", "col":"Colorado Avalanche",
+# 	"oilers":"Edmonton Oilers", "edm":"Edmonton Oilers",
+# 	"canucks":"Vancouver Canucks", "van":"Vancouver Canucks",
+# 	"ducks":"Anaheim Ducks", "ana":"Anaheim Ducks",
+# 	"stars":"Dallas Stars", "dal":"Dallas Stars",
+# 	"kings":"Los Angeles Kings", "lak":'Los Angeles Kings',
+# 	"sharks":"San Jose Sharks", "sjs":"San Jose Sharks",
+# 	"cbj":"29", "bjs":"29", "blue jackets":"29",
+# 	"wild":"Minnesota Wild", "min":"Minnesota Wild",
+# 	"jets":"Winnipeg Jets", "wpg":"Winnipeg Jets",
+# 	"coyotes":"Arizona Coyotes", "ari":"Arizona Coyotes",
+# 	"vgk":"Vegas Golden Knights", "knights":"Vegas Golden Knights", "vegas":"Vegas Golden Knights"
+# }
+
+
+
 # /help
 # returns a list of acceptable commands and their format 
 # WORKS
@@ -124,10 +199,7 @@ def liveData(link):
 
 	result = ''
 	result += "{}".format(gameResult)
-	# result += "{}: {}\n".format(awayTeamName, awayGoals)
-	# result += "  {} SOG\n".format(awayShots)
-	# result += "{}: {}\n".format(homeTeamName, homeGoals)
-	# result += "  {} SOG".format(homeShots)
+
 	if awayPP == "true":
 		result += "[{}]: {} {}: {}".format(awayTeamAbbrev, awayGoals, homeTeamAbbrev, homeGoals)
 	elif homePP == "true":
@@ -147,7 +219,7 @@ def liveData(link):
 # returns a list of the days scores
 # WORKS // need to add times/game status
 def dailySummary():
-	date = getDate()
+	date = getDate(0)
 	result = historicalDailySummary(date)
 	return result
 
@@ -155,6 +227,8 @@ def dailySummary():
 # returns a list of scores from a given day
 # WORKS // need to add game status (FINAL/FINAL(OT))
 def historicalDailySummary(date):
+	if date == "yesterday":
+		date = getDate(1);
 	schedule = "https://statsapi.web.nhl.com/api/v1/schedule?date="+date
 	response = requests.get(schedule)
 	data = response.json()
@@ -174,7 +248,7 @@ def historicalDailySummary(date):
 # works... ***live to be tested***
 def teamScore(team): 
 	result = ''
-	date = getDate()
+	date = getDate(0)
 	schedule = "https://statsapi.web.nhl.com/api/v1/schedule?teamId={}&startDate=2018-01-01&endDate={}".format(teamIDs[team.lower()], date)
 	data = returnData(schedule)
 	lastGameIndex = (data['totalGames'] - 1)
@@ -207,12 +281,17 @@ def historicalTeamScore(team, date):
 		result = "That team did not play that day."
 		return result
 
+
+# def teamLastX(team, numGames)
+
+
+
 # /score <team> last
 # returns a teams last final score
 # WORKS // DONE
 def teamLastScore(team):
 	result = ''
-	date = getDate()
+	date = getDate(0)
 	schedule = "https://statsapi.web.nhl.com/api/v1/schedule?teamId={}&startDate=2018-01-01&endDate={}".format(teamIDs[team.lower()], date)
 	data = returnData(schedule)
 	lastGameIndex = data['totalGames'] - 1
@@ -245,11 +324,15 @@ def standings(division):
 	x = data['records'][divID[division]]['teamRecords']
 	for key in x:
 		team = x[i]['team']['name']
+		numSpaces = 35 - len(team) - 12
 		wins = x[i]['leagueRecord']['wins']
 		losses = x[i]['leagueRecord']['losses']
 		ot = x[i]['leagueRecord']['ot']
 		pts = x[i]['points']
-		result += "{} {}-{}-{} {}\n".format(team.encode('utf-8'), wins, losses, ot, pts)
+		result += "{}".format(team.encode('utf-8'))
+		for z in range(0,numSpaces+1):
+			result += " "
+		result += "{}~{}~{} {}\n".format(wins, losses, ot, pts)
 		i = i +1
 	return result
 
@@ -259,7 +342,7 @@ def goalHighlight(team, goalNum): # fix this to work for live and not live games
 	result = ''
 	goals = {}; goalDescs = []
 	i = 0; goalNumCt = 1
-	date = getDate()
+	date = getDate(0)
 	schedule = "https://statsapi.web.nhl.com/api/v1/schedule?teamId={}&startDate=2018-01-01&endDate={}".format(teamIDs[team.lower()], date)
 	data = returnData(schedule)
 	lastGameIndex = data['totalGames'] - 1
@@ -300,28 +383,10 @@ def goalHighlight(team, goalNum): # fix this to work for live and not live games
 
 
 def teamGoalLast(team):
+	date = getDate(0);
 	schedule = "https://statsapi.web.nhl.com/api/v1/schedule?teamId={}&startDate=2018-01-01&endDate={}".format(teamIDs[team.lower()], date)
 	data = returnData(schedule)
 	lastGame = data['totalGames'] - 1
 
 
-
-# /goal <team> last
-# returns the last goal scored in the CURRENT LIVE or LAST FINAL  game 
-# not built
-# def goalHighlightLast(team):
-	# get games from the first through date()
-	# find last game
-	# if last game = scheduled -> skip to next game
-		# find last goal
-		#return last goal
-	# if last game = live ->
-		#find last goal
-		#return last goal
-	# if last game = final ->
-		#find last goal
-		# return last goal
-
-# /goal <team> <date> <goalnum>
-# returns a given goal from a game on a given date... goal number or LAST for the last goal
-# def historicalGoalHighlight(team, date, goalNum)
+		
