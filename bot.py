@@ -40,6 +40,9 @@ def echo_all(updates):
             arg1 = ''
             arg2 = ''
 
+            if command[0] != '/':
+                break;
+
             if command == "/score":
                 arg1 = text.split(' ', 2)[1]
                 try:
@@ -65,9 +68,15 @@ def echo_all(updates):
                 arg2 = text.split(' ', 2)[2]
                 print arg2
                 if arg2.lower() == "last":
-                    text = api.goalHighlight(arg1, str(arg2))
+                    try:
+                        text = api.goalHighlight(arg1, str(arg2))
+                    except:
+                        text = "No video for that goal found"
                 else:
-                    text = api.goalHighlight(arg1, int(arg2))
+                    try:
+                        text = api.goalHighlight(arg1, int(arg2))
+                    except:
+                        text = "No video for that goal found"
                 chat = update["message"]["chat"]["id"]
                 send_message(text, chat)
                 break
@@ -86,7 +95,6 @@ def echo_all(updates):
                         text = api.goalHelp()
                 except IndexError:
                     text = api.help()
-
 
 
             chat = update["message"]["chat"]["id"]

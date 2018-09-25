@@ -4,16 +4,16 @@ import datetime
 # import test
 
 
-def getDate(I):	# pass 0 for today's date, pass 1 for yesterday's date
+def getDate(d):	# pass 0 for today's date, pass 1 for yesterday's date
 	now = datetime.datetime.now()
 	year = now.year
 	month = now.month
 	if month < 10:
 		month = "0"+str(month)
 
-	if I == 0: 
+	if d == 0: 
 		day = now.day
-	elif I == 1:
+	elif d == 1:
 		day = now.day - 1
 
 	if day < 10:
@@ -355,6 +355,7 @@ def goalHighlight(team, goalNum): # fix this to work for live and not live games
 		lastGame = data['dates'][lastGameIndex]['games'][0]
 
 	link = data['dates'][lastGameIndex]['games'][0]['content']['link']
+	print "https://statsapi.web.nhl.com/"+link
 	content = returnData("https://statsapi.web.nhl.com/"+link)
 	items = content['media']['milestones']['items']
 
@@ -373,12 +374,8 @@ def goalHighlight(team, goalNum): # fix this to work for live and not live games
 	else:
 		goalNum = goalNumCt - 1
 
-	result = ''
-	try: 
-		result += "{}\n".format(goalDescs[goalNum - 1])
-		result += "{}".format(goals[goalNum])
-	except IndexError:
-		result += "No video for that goal found"
+	result += "{}\n".format(goalDescs[goalNum - 1])
+	result += "{}".format(goals[goalNum])
 	return result
 
 
